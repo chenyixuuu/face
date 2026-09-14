@@ -107,7 +107,7 @@ Phase 4 已完成；Phase 5 网页方案暂停。远程服务器已更换 IP 并
 - [x] 只读核对 `/home/firecom/yjr/cat_data/cat.tar.gz` 的大小、压缩可读性和成员路径安全性；尚未额外执行整包 SHA-256。
 - [x] 利用已有流式去重脚本解压到新的隔离目录，原压缩包未修改或覆盖。
 - [x] 统计猫身份数、图片数、每类分布、格式和完全重复；尺寸分布与全量解码损坏检查尚待补充。
-- [ ] 判断数据是否已裁剪为猫脸，以及是否已有训练/验证/测试划分。
+- [x] 判断数据是否已裁剪为猫脸，以及是否已有训练/验证/测试划分：数据以猫主体/猫脸近景为主，但没有统一猫脸检测裁剪；已有按身份隔离的 train/validation/test 划分。
 - [x] 已确认按身份的 train/validation/test 划分，同一只猫不跨 split。
 - [x] 选择 embedding/度量学习路线，并完成 frozen DINOv2 ViT-B/14 validation/test 检索 baseline。
 - **Status:** in_progress
@@ -202,7 +202,9 @@ flowchart LR
 9. [已完成] 使用训练身份的冻结 embedding 完成 2000 步监督式对比学习适配器训练；validation Top-1 59.87%，唯一一次 test Top-1 59.79%，最佳权重与测试报告已落盘。
 10. [已完成] validation 公平对照确认多图 gallery 有独立收益：固定样本下 1/2/3 张登记照 Top-1 为 61.36%/71.03%/76.49%；近期 MVP 采用至少 2 张、推荐 3 张登记照。
 11. [已完成] validation 错误与身份样本数分层：三图 gallery 下 3,949 个错误涉及 2,880 个身份，已导出 200 个高置信错误路径；7+ 图片身份 Top-1 达 80.43%。
-12. [进行中] 已为前 20 个高置信错误生成 query、真实 gallery、误认 gallery 联系表；下一步下载并核查标签/主体/姿态，再在 validation 上验证猫脸区域裁剪。禁止根据 test 结果继续调参。
+12. [已完成] 已下载并目视核查前 20 个高置信错误联系表；validation 感知哈希审计发现 349 组跨身份近重复候选，前 20 个高置信误认身份对中 10 对被直接命中。
+13. [已完成] 仅在 validation 上完成裁剪对照：中心裁剪 Top-1 37.66%，低于原图约 38.73%；猫脸级联检测覆盖率 68.10%，在完全配对的 26,931 个 query 上 Top-1 44.80%，低于原图 46.99%。当前不采用这两种裁剪。
+14. [进行中] 下一步优先治理跨身份近重复和疑似同猫多 ID，形成不修改原数据的 exclusion/merge-candidate 清单，再重新计算干净 validation 指标。
 
 ## Errors Encountered
 
@@ -218,6 +220,8 @@ flowchart LR
 | Termius `noWindowsAvailable`，替换界面与状态不一致 | 3 | 重新获取窗口/前台恢复仍失败；保留旧文件备份，暂停同步，远程验收未完成。 |
 | 继续后 Termius `AXError.invalidUIElement` 且 AX/截图不一致 | 刷新、切换 SSH、重新前台 | 无法获取 pwd 的可读结果，仍不能确认文件替换；按 planning-with-files 三次失败规则暂停，请用户将已登录服务器终端切至前台。 |
 | 系统 SSH 缺少该主机 ED25519 已知密钥 | 1 次只读复核 | 严格校验拒绝连接；未关闭校验或擅自信任网络返回的指纹。 |
+| 非交互 SSH 未自动加载 firecom 的 Conda/Python | 1 | 改用 `/home/firecom/miniconda3/...` 绝对路径，不依赖 shell 初始化。 |
+| OpenCV 5.0 Python 包未导出 `CascadeClassifier` | 1 | 读取构建信息确认 Python 绑定缺失；将 transformer 环境固定为兼容的 `opencv-python-headless==4.10.0.84`，接口验证通过。 |
 | `stream disconnected before completion` | 1 | 属于对话服务/本地代理连接中断，不是人脸识别项目故障；重新建立会话后继续读取远程结果。 |
 | 旧 SSH 会话已被回收 | 1 | 重新登录服务器，只读检查已生成的报告，没有重复运行模型。 |
 | `kex_exchange_identification: read: Connection reset by peer` | 3 | 服务器在 SSH 密钥协商前拒绝新连接；暂停重试，待服务器连接限制恢复后用后台服务和 5001 本地隧道继续。 |

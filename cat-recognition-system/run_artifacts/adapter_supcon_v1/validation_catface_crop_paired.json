@@ -1,0 +1,15 @@
+{
+  "detected_paths": 41061,
+  "baseline_on_paired_subset": {
+    "gallery_identities": 11644,
+    "queries": 26931,
+    "top1": 0.46990457094055177,
+    "top3": 0.5622888121495674
+  },
+  "catface_crop_on_paired_subset": {
+    "gallery_identities": 11644,
+    "queries": 26931,
+    "top1": 0.44799673239018234,
+    "top3": 0.5392670157068062
+  }
+}

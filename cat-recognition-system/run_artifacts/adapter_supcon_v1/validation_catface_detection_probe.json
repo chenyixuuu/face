@@ -1,0 +1,13 @@
+{
+  "images": 5000,
+  "standard": {
+    "detected": 3377,
+    "coverage": 0.6754,
+    "median_area_ratio": 0.6457270408163265
+  },
+  "extended": {
+    "detected": 3388,
+    "coverage": 0.6776,
+    "median_area_ratio": 0.6529217155612245
+  }
+}

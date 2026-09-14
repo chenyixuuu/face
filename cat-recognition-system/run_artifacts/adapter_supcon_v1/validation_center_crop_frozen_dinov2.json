@@ -1,0 +1,11 @@
+{
+  "model": "dinov2_vitb14_reg_center",
+  "protocol": "One gallery image per identity from the selected split; remaining photos query that gallery.",
+  "gallery_identities": 15498,
+  "query_split": "validation",
+  "final_test_authorized": false,
+  "queries": 44375,
+  "top1": 0.3765633802816901,
+  "top3": 0.46296338028169015,
+  "notes": "This is a closed-set retrieval measurement. Unknown-cat thresholding requires separate, identity-disjoint unknown data."
+}
