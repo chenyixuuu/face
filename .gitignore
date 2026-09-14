@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Python 缓存与本地环境
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# 本地临时运行文件
+*.log
+*.pid
+
+# 数据集、报告、模型权重和压缩包属于本工程，允许 Git 跟踪。
