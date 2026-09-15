@@ -33,8 +33,11 @@ def load_split(directory: Path, split: str) -> tuple[np.ndarray, np.ndarray, np.
 
 
 class ResidualMetricAdapter(nn.Module):
-    def __init__(self, input_dim: int, hidden_dim: int, output_dim: int) -> None:
+    def __init__(self, input_dim: int, hidden_dim: int, output_dim: int, residual: bool = False) -> None:
         super().__init__()
+        if residual and input_dim != output_dim:
+            raise ValueError("Residual adapter requires output_dim to match input_dim")
+        self.residual = residual
         self.project = nn.Sequential(
             nn.Linear(input_dim, hidden_dim),
             nn.GELU(),
@@ -43,7 +46,24 @@ class ResidualMetricAdapter(nn.Module):
         )
 
     def forward(self, vectors: torch.Tensor) -> torch.Tensor:
-        return F.normalize(self.project(vectors), dim=1)
+        projected = self.project(vectors)
+        if self.residual:
+            projected = vectors + projected
+        return F.normalize(projected, dim=1)
+
+
+def build_adapter_from_checkpoint(checkpoint: dict) -> ResidualMetricAdapter:
+    state = checkpoint["model"]
+    first_weight = state["project.0.weight"]
+    last_weight = state["project.3.weight"]
+    model = ResidualMetricAdapter(
+        input_dim=int(first_weight.shape[1]),
+        hidden_dim=int(first_weight.shape[0]),
+        output_dim=int(last_weight.shape[0]),
+        residual=bool(checkpoint.get("config", {}).get("residual", False)),
+    )
+    model.load_state_dict(state)
+    return model
 
 
 def supervised_contrastive_loss(features: torch.Tensor, labels: torch.Tensor, temperature: float) -> torch.Tensor:
@@ -56,11 +76,11 @@ def supervised_contrastive_loss(features: torch.Tensor, labels: torch.Tensor, te
     return (denominator - positive_mean).mean()
 
 
-def make_groups(labels: np.ndarray) -> tuple[list[str], dict[str, np.ndarray]]:
+def make_groups(labels: np.ndarray, min_images: int = 2) -> tuple[list[str], dict[str, np.ndarray]]:
     groups: dict[str, list[int]] = defaultdict(list)
     for index, label in enumerate(labels.astype(str)):
         groups[label].append(index)
-    eligible = sorted(label for label, indices in groups.items() if len(indices) >= 2)
+    eligible = sorted(label for label, indices in groups.items() if len(indices) >= min_images)
     return eligible, {label: np.asarray(groups[label], dtype=np.int64) for label in eligible}
 
 
@@ -134,6 +154,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--images-per-identity", type=int, default=2)
     parser.add_argument("--hidden-dim", type=int, default=1024)
     parser.add_argument("--output-dim", type=int, default=256)
+    parser.add_argument("--residual", action="store_true")
     parser.add_argument("--temperature", type=float, default=0.07)
     parser.add_argument("--learning-rate", type=float, default=3e-4)
     parser.add_argument("--weight-decay", type=float, default=1e-4)
@@ -154,11 +175,13 @@ def main() -> int:
 
     train_vectors, train_ids, _ = load_split(args.embeddings, "train")
     val_vectors, val_ids, val_paths = load_split(args.embeddings, "validation")
-    eligible, groups = make_groups(train_ids)
+    eligible, groups = make_groups(train_ids, min_images=args.images_per_identity)
     if len(eligible) < args.identities_per_batch:
         raise ValueError("Not enough train identities with at least two images")
 
-    model = ResidualMetricAdapter(train_vectors.shape[1], args.hidden_dim, args.output_dim).to(device)
+    model = ResidualMetricAdapter(
+        train_vectors.shape[1], args.hidden_dim, args.output_dim, residual=args.residual,
+    ).to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.steps)
     rng = np.random.default_rng(args.seed)

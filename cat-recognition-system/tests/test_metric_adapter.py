@@ -16,6 +16,35 @@ SPEC.loader.exec_module(MODULE)
 
 
 class MetricAdapterTests(unittest.TestCase):
+    def test_checkpoint_builder_restores_residual_mode(self):
+        source = MODULE.ResidualMetricAdapter(4, 8, 4, residual=True)
+        for parameter in source.project.parameters():
+            torch.nn.init.zeros_(parameter)
+        checkpoint = {"model": source.state_dict(), "config": {"residual": True}}
+
+        restored = MODULE.build_adapter_from_checkpoint(checkpoint)
+        output = restored(torch.tensor([[3.0, 0.0, 4.0, 0.0]]))
+
+        torch.testing.assert_close(output, torch.tensor([[0.6, 0.0, 0.8, 0.0]]))
+
+    def test_groups_respect_requested_images_per_identity(self):
+        labels = np.asarray(["a", "a", "b", "b", "b", "c"])
+
+        eligible, groups = MODULE.make_groups(labels, min_images=3)
+
+        self.assertEqual(eligible, ["b"])
+        self.assertEqual(groups["b"].tolist(), [2, 3, 4])
+
+    def test_residual_adapter_keeps_normalized_input_when_projection_is_zero(self):
+        model = MODULE.ResidualMetricAdapter(4, 8, 4, residual=True)
+        for parameter in model.project.parameters():
+            torch.nn.init.zeros_(parameter)
+        vectors = torch.tensor([[3.0, 0.0, 4.0, 0.0]])
+
+        output = model(vectors)
+
+        torch.testing.assert_close(output, torch.tensor([[0.6, 0.0, 0.8, 0.0]]))
+
     def test_balanced_batch_has_two_examples_per_identity(self):
         vectors = np.arange(48, dtype=np.float32).reshape(12, 4)
         labels = np.asarray(["a"] * 3 + ["b"] * 3 + ["c"] * 3 + ["d"] * 3)

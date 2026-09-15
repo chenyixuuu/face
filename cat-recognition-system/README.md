@@ -7,6 +7,7 @@
 - 数据清洗后保留 164,100 个猫身份、601,641 张图片。
 - 冻结 DINOv2 ViT-B/14 reg4 基线：测试集 Top-1 `39.14%`。
 - 监督式对比学习适配器：验证集 Top-1 `59.87%`，测试集 Top-1 `59.79%`。
+- 残差适配器（每身份采样 3 张）：验证集单图登记 Top-1/Top-3 提升至 `60.43%/70.30%`；尚未读取测试集。
 - 固定验证身份与查询图片时，使用 1、2、3 张登记照的 Top-1 分别为 `61.36%`、`71.03%`、`76.49%`。
 - validation 跨身份感知哈希审计发现 349 组近重复候选，涉及 418 个身份；前 20 个高置信错误身份对中有 10 对被直接命中。
 - 349 对候选组成 178 个关联组；保守排除全部 418 个相关身份后，适配器 1/3 张登记照 Top-1 从 `59.87%/76.49%` 升至 `60.16%/76.88%`。提升较小，说明近重复冲突不是当前主要瓶颈。
@@ -57,11 +58,18 @@ run_artifacts/adapter_supcon_v1/
 ├── validation_excluded_identities.json
 ├── validation_clean_sensitivity.json
 └── validation_hard_errors_contact_sheet.png
+
+run_artifacts/adapter_residual_i3_v1/
+├── best.pt
+├── last.pt
+├── history.jsonl
+├── validation_metrics.json
+└── validation_gallery_sizes.json
 ```
 
 ## 下一步
 
 1. 人工复核 178 个跨身份候选组，确定哪些是同猫多 ID、近似构图或误报；脚本不会自动改标签。
-2. 下一轮模型实验优先尝试更强的猫个体度量学习或端到端微调，仍只用 validation 选方案。
+2. 残差适配器已小幅超过旧模型；下一轮优先评估更强损失函数或仅解冻主干最后若干层，仍只用 validation 选方案。
 3. 若继续研究裁剪，应换用经过猫脸标注训练的检测器；当前中心裁剪和传统级联方案均不采用。
 4. 为实际登记流程采用至少 2 张、推荐 3 张不同姿态或场景照片。

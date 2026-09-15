@@ -1,0 +1,14 @@
+{
+  "split": "validation",
+  "checkpoint": "/home/firecom/yjr/cat-recognition-system/run_artifacts/adapter_residual_i3_v1/best.pt",
+  "checkpoint_validation_metrics": {
+    "gallery_identities": 15498,
+    "queries": 44375,
+    "top1": 0.6042816901408451,
+    "top3": 0.7029859154929577
+  },
+  "gallery_identities": 15498,
+  "queries": 44375,
+  "top1": 0.6042816901408451,
+  "top3": 0.7029859154929577
+}

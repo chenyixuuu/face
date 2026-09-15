@@ -9,7 +9,7 @@ from pathlib import Path
 
 import torch
 
-from train_metric_adapter import ResidualMetricAdapter, load_split, retrieval_metrics
+from train_metric_adapter import build_adapter_from_checkpoint, load_split, retrieval_metrics
 
 
 def parse_args() -> argparse.Namespace:
@@ -35,15 +35,7 @@ def main() -> int:
 
     device = torch.device(args.device)
     checkpoint = torch.load(args.checkpoint, map_location="cpu", weights_only=False)
-    state = checkpoint["model"]
-    first_weight = state["project.0.weight"]
-    last_weight = state["project.3.weight"]
-    model = ResidualMetricAdapter(
-        input_dim=int(first_weight.shape[1]),
-        hidden_dim=int(first_weight.shape[0]),
-        output_dim=int(last_weight.shape[0]),
-    ).to(device)
-    model.load_state_dict(state)
+    model = build_adapter_from_checkpoint(checkpoint).to(device)
 
     vectors, identities, paths = load_split(args.embeddings, args.split)
     metrics = retrieval_metrics(model, vectors, identities, paths, device, args.batch_size)

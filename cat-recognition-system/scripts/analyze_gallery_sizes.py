@@ -10,7 +10,7 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from train_metric_adapter import ResidualMetricAdapter, load_split
+from train_metric_adapter import build_adapter_from_checkpoint, load_split
 
 
 def parse_args() -> argparse.Namespace:
@@ -41,12 +41,7 @@ def adapt_all(
 
 def build_model(checkpoint_path: Path, device: torch.device) -> torch.nn.Module:
     checkpoint = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
-    state = checkpoint["model"]
-    first = state["project.0.weight"]
-    last = state["project.3.weight"]
-    model = ResidualMetricAdapter(first.shape[1], first.shape[0], last.shape[0]).to(device)
-    model.load_state_dict(state)
-    return model
+    return build_adapter_from_checkpoint(checkpoint).to(device)
 
 
 def evaluate_gallery_size(
