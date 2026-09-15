@@ -1,0 +1,272 @@
+{
+  "split": "validation",
+  "policy": "Exclude all identities in dHash cross-identity candidate components; sensitivity analysis only.",
+  "images_before": 60292,
+  "images_after": 58639,
+  "excluded_images": 1653,
+  "excluded_identities": 418,
+  "frozen_dinov2_before": {
+    "standard": [
+      {
+        "gallery_size": 1,
+        "query_start": 1,
+        "gallery_identities": 15498,
+        "queries": 44375,
+        "top1": 0.3872676056338028,
+        "top3": 0.4722704225352113,
+        "mean_top1_similarity": 0.8765389323234558,
+        "median_images_per_eligible_identity": 4.0
+      },
+      {
+        "gallery_size": 2,
+        "query_start": 2,
+        "gallery_identities": 12083,
+        "queries": 28877,
+        "top1": 0.4780967552031028,
+        "top3": 0.5735014025002597,
+        "mean_top1_similarity": 0.8860114216804504,
+        "median_images_per_eligible_identity": 4.0
+      },
+      {
+        "gallery_size": 3,
+        "query_start": 3,
+        "gallery_identities": 8283,
+        "queries": 16794,
+        "top1": 0.5528164820769322,
+        "top3": 0.6501726807193046,
+        "mean_top1_similarity": 0.889159083366394,
+        "median_images_per_eligible_identity": 5.0
+      }
+    ],
+    "matched_query_start_3": [
+      {
+        "gallery_size": 1,
+        "query_start": 3,
+        "gallery_identities": 8283,
+        "queries": 16794,
+        "top1": 0.3917470525187567,
+        "top3": 0.4871382636655949,
+        "mean_top1_similarity": 0.8692607283592224,
+        "median_images_per_eligible_identity": 5.0
+      },
+      {
+        "gallery_size": 2,
+        "query_start": 3,
+        "gallery_identities": 8283,
+        "queries": 16794,
+        "top1": 0.4855305466237942,
+        "top3": 0.5849708229129451,
+        "mean_top1_similarity": 0.8828576803207397,
+        "median_images_per_eligible_identity": 5.0
+      },
+      {
+        "gallery_size": 3,
+        "query_start": 3,
+        "gallery_identities": 8283,
+        "queries": 16794,
+        "top1": 0.5528164820769322,
+        "top3": 0.6501726807193046,
+        "mean_top1_similarity": 0.889159083366394,
+        "median_images_per_eligible_identity": 5.0
+      }
+    ]
+  },
+  "frozen_dinov2_after": {
+    "standard": [
+      {
+        "gallery_size": 1,
+        "query_start": 1,
+        "gallery_identities": 15095,
+        "queries": 43140,
+        "top1": 0.388618451553083,
+        "top3": 0.4729485396383866,
+        "mean_top1_similarity": 0.8758929967880249,
+        "median_images_per_eligible_identity": 4.0
+      },
+      {
+        "gallery_size": 2,
+        "query_start": 2,
+        "gallery_identities": 11749,
+        "queries": 28045,
+        "top1": 0.481583169905509,
+        "top3": 0.5751827420217508,
+        "mean_top1_similarity": 0.885405421257019,
+        "median_images_per_eligible_identity": 4.0
+      },
+      {
+        "gallery_size": 3,
+        "query_start": 3,
+        "gallery_identities": 8044,
+        "queries": 16296,
+        "top1": 0.5563328424153167,
+        "top3": 0.6521845851742759,
+        "mean_top1_similarity": 0.8887156844139099,
+        "median_images_per_eligible_identity": 5.0
+      }
+    ],
+    "matched_query_start_3": [
+      {
+        "gallery_size": 1,
+        "query_start": 3,
+        "gallery_identities": 8044,
+        "queries": 16296,
+        "top1": 0.39328669612174766,
+        "top3": 0.4887702503681885,
+        "mean_top1_similarity": 0.8687122464179993,
+        "median_images_per_eligible_identity": 5.0
+      },
+      {
+        "gallery_size": 2,
+        "query_start": 3,
+        "gallery_identities": 8044,
+        "queries": 16296,
+        "top1": 0.4890770741286205,
+        "top3": 0.5865856651939126,
+        "mean_top1_similarity": 0.8823812007904053,
+        "median_images_per_eligible_identity": 5.0
+      },
+      {
+        "gallery_size": 3,
+        "query_start": 3,
+        "gallery_identities": 8044,
+        "queries": 16296,
+        "top1": 0.5563328424153167,
+        "top3": 0.6521845851742759,
+        "mean_top1_similarity": 0.8887156844139099,
+        "median_images_per_eligible_identity": 5.0
+      }
+    ]
+  },
+  "adapter_before": {
+    "standard": [
+      {
+        "gallery_size": 1,
+        "query_start": 1,
+        "gallery_identities": 15498,
+        "queries": 44375,
+        "top1": 0.5986704225352113,
+        "top3": 0.700169014084507,
+        "mean_top1_similarity": 0.7648991346359253,
+        "median_images_per_eligible_identity": 4.0
+      },
+      {
+        "gallery_size": 2,
+        "query_start": 2,
+        "gallery_identities": 12083,
+        "queries": 28877,
+        "top1": 0.7022890189424109,
+        "top3": 0.7925338504692315,
+        "mean_top1_similarity": 0.7860347032546997,
+        "median_images_per_eligible_identity": 4.0
+      },
+      {
+        "gallery_size": 3,
+        "query_start": 3,
+        "gallery_identities": 8283,
+        "queries": 16794,
+        "top1": 0.7648564963677504,
+        "top3": 0.8455400738358938,
+        "mean_top1_similarity": 0.7954946756362915,
+        "median_images_per_eligible_identity": 5.0
+      }
+    ],
+    "matched_query_start_3": [
+      {
+        "gallery_size": 1,
+        "query_start": 3,
+        "gallery_identities": 8283,
+        "queries": 16794,
+        "top1": 0.6136120042872455,
+        "top3": 0.7207931404072884,
+        "mean_top1_similarity": 0.7509083151817322,
+        "median_images_per_eligible_identity": 5.0
+      },
+      {
+        "gallery_size": 2,
+        "query_start": 3,
+        "gallery_identities": 8283,
+        "queries": 16794,
+        "top1": 0.710313207097773,
+        "top3": 0.8008812671192093,
+        "mean_top1_similarity": 0.7797877788543701,
+        "median_images_per_eligible_identity": 5.0
+      },
+      {
+        "gallery_size": 3,
+        "query_start": 3,
+        "gallery_identities": 8283,
+        "queries": 16794,
+        "top1": 0.7648564963677504,
+        "top3": 0.8455400738358938,
+        "mean_top1_similarity": 0.7954946756362915,
+        "median_images_per_eligible_identity": 5.0
+      }
+    ]
+  },
+  "adapter_after": {
+    "standard": [
+      {
+        "gallery_size": 1,
+        "query_start": 1,
+        "gallery_identities": 15095,
+        "queries": 43140,
+        "top1": 0.6015762633286973,
+        "top3": 0.701808066759388,
+        "mean_top1_similarity": 0.763954222202301,
+        "median_images_per_eligible_identity": 4.0
+      },
+      {
+        "gallery_size": 2,
+        "query_start": 2,
+        "gallery_identities": 11749,
+        "queries": 28045,
+        "top1": 0.7058299162060974,
+        "top3": 0.7940096273845605,
+        "mean_top1_similarity": 0.7852196097373962,
+        "median_images_per_eligible_identity": 4.0
+      },
+      {
+        "gallery_size": 3,
+        "query_start": 3,
+        "gallery_identities": 8044,
+        "queries": 16296,
+        "top1": 0.7688389788905253,
+        "top3": 0.8467722140402553,
+        "mean_top1_similarity": 0.7948939204216003,
+        "median_images_per_eligible_identity": 5.0
+      }
+    ],
+    "matched_query_start_3": [
+      {
+        "gallery_size": 1,
+        "query_start": 3,
+        "gallery_identities": 8044,
+        "queries": 16296,
+        "top1": 0.6172680412371134,
+        "top3": 0.7237358861070201,
+        "mean_top1_similarity": 0.7501222491264343,
+        "median_images_per_eligible_identity": 5.0
+      },
+      {
+        "gallery_size": 2,
+        "query_start": 3,
+        "gallery_identities": 8044,
+        "queries": 16296,
+        "top1": 0.7139175257731959,
+        "top3": 0.802712322042219,
+        "mean_top1_similarity": 0.7791598439216614,
+        "median_images_per_eligible_identity": 5.0
+      },
+      {
+        "gallery_size": 3,
+        "query_start": 3,
+        "gallery_identities": 8044,
+        "queries": 16296,
+        "top1": 0.7688389788905253,
+        "top3": 0.8467722140402553,
+        "mean_top1_similarity": 0.7948939204216003,
+        "median_images_per_eligible_identity": 5.0
+      }
+    ]
+  }
+}
