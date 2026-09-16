@@ -1,0 +1,21 @@
+{
+  "split": "validation",
+  "model": "arcface_v2_epoch3",
+  "checkpoint_sha256": "f24068b8dff56de7bcff34b322bb9b8c31ca75fe33596556f8e6430ceaca6108",
+  "images": 60292,
+  "unique_paths": 60292,
+  "unique_identities": 15917,
+  "embedding_dim": 512,
+  "norm_min": 0.9999300241470337,
+  "norm_max": 1.0000672340393066,
+  "standard_results": [
+    {"gallery_size": 1, "query_start": 1, "gallery_identities": 15498, "queries": 44375, "top1": 0.5920901408450704, "top3": 0.6836056338028169},
+    {"gallery_size": 2, "query_start": 2, "gallery_identities": 12083, "queries": 28877, "top1": 0.7001766111438169, "top3": 0.7864736641617897},
+    {"gallery_size": 3, "query_start": 3, "gallery_identities": 8283, "queries": 16794, "top1": 0.7712278194593307, "top3": 0.8474455162558057}
+  ],
+  "matched_cohort_results": [
+    {"gallery_size": 1, "query_start": 3, "gallery_identities": 8283, "queries": 16794, "top1": 0.6005716327259736, "top3": 0.6992973681076575},
+    {"gallery_size": 2, "query_start": 3, "gallery_identities": 8283, "queries": 16794, "top1": 0.7057877813504824, "top3": 0.7949267595569847},
+    {"gallery_size": 3, "query_start": 3, "gallery_identities": 8283, "queries": 16794, "top1": 0.7712278194593307, "top3": 0.8474455162558057}
+  ]
+}

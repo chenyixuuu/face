@@ -405,6 +405,9 @@
 - 一次远程日志轮询因 shell 变量被转义为字面量 `$d` 而失败；随即改为三个明确路径读取，没有重复错误命令，也未影响训练。
 - 本地验证：4 份实验 JSON 可解析、错误 CSV 含 200 条记录、联系表为 1260×4602 PNG、人脸模块 23 项测试通过、全部项目 Python 文件语法编译通过。
 - 猫脸适配器测试仍未运行：本机现有 Python 环境没有同时具备 NumPy 与 PyTorch，服务器猫脸工程当前也没有同步 `tests/` 目录；这是验证条件缺失，不记为测试通过。
+- 使用队长 ArcFace V2 checkpoint 在原始 identity-disjoint validation 上重新提取 60,292 条 512 维特征；路径无重复，向量范数接近 1，最终 test 未读取。
+- 同协议标准 K=1/2/3 登记照下，Triplet Top-1 为 60.59%/70.69%/76.99%，ArcFace V2 为 59.21%/70.02%/77.12%；Triplet 更适合 1～2 张登记照，ArcFace V2 仅在 3 张时领先 0.13 个百分点。
+- 对比报告和结构化结果已保存为 `cat-recognition-system/ARCFACE_V2_COMPARISON.md` 与 `cat-recognition-system/run_artifacts/arcface_v2_original_validation/validation_gallery_sizes.json`。
 
 ### 本地工程文件整理（2026-09-14）
 
