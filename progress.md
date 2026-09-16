@@ -408,6 +408,8 @@
 - 使用队长 ArcFace V2 checkpoint 在原始 identity-disjoint validation 上重新提取 60,292 条 512 维特征；路径无重复，向量范数接近 1，最终 test 未读取。
 - 同协议标准 K=1/2/3 登记照下，Triplet Top-1 为 60.59%/70.69%/76.99%，ArcFace V2 为 59.21%/70.02%/77.12%；Triplet 更适合 1～2 张登记照，ArcFace V2 仅在 3 张时领先 0.13 个百分点。
 - 对比报告和结构化结果已保存为 `cat-recognition-system/ARCFACE_V2_COMPARISON.md` 与 `cat-recognition-system/run_artifacts/arcface_v2_original_validation/validation_gallery_sizes.json`。
+- 对 349 对 validation 跨身份近重复候选、178 个关联组完成只读优先级统计；第 133 组下载五个身份的原图到本机临时目录并抽查配对画面，记录为强烈疑似同猫多 ID，未改动原图或标签。复核进度见 `cat-recognition-system/VALIDATION_IDENTITY_REVIEW.md`。
+- 过程问题：本机默认 Python 缺 Pillow，未做像素级比较；一次 SFTP 花括号批量路径不受支持，改为逐目录只读下载。两项均未影响原始数据。
 
 ### 本地工程文件整理（2026-09-14）
 

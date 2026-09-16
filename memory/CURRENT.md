@@ -21,7 +21,7 @@
 
 ## 下一步
 
-1. 人工复核 validation 的 178 个跨身份候选关联组，确认同猫多 ID 与哈希误报，不自动修改标签。
+1. validation 的 178 个跨身份候选关联组已完成优先级分层，并目视复核第 133 组；其余 177 组仍待核，不自动修改标签。详见 `cat-recognition-system/VALIDATION_IDENTITY_REVIEW.md`。
 2. 若继续提升模型，评估局部解冻 DINOv2，并设置资源预算和 validation 提升门槛；test 保持冻结。
 3. 后续从服务器同步新增猫脸训练代码、数据或权重时，先核验文件清单和校验值。
 
