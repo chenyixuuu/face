@@ -1,0 +1,14 @@
+{
+  "split": "validation",
+  "checkpoint": "/home/firecom/yjr/cat-recognition-system/run_artifacts/adapter_triplet_w020_v1/best.pt",
+  "checkpoint_validation_metrics": {
+    "gallery_identities": 15498,
+    "queries": 44375,
+    "top1": 0.6058591549295774,
+    "top3": 0.7045633802816902
+  },
+  "gallery_identities": 15498,
+  "queries": 44375,
+  "top1": 0.6058591549295774,
+  "top3": 0.7045633802816902
+}

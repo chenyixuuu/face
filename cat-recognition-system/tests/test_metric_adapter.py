@@ -16,6 +16,37 @@ SPEC.loader.exec_module(MODULE)
 
 
 class MetricAdapterTests(unittest.TestCase):
+    def test_scheduler_horizon_can_match_full_training_during_screening(self):
+        self.assertEqual(MODULE.resolve_scheduler_steps(500, None), 500)
+        self.assertEqual(MODULE.resolve_scheduler_steps(500, 2000), 2000)
+        with self.assertRaises(ValueError):
+            MODULE.resolve_scheduler_steps(500, 499)
+
+    def test_batch_hard_triplet_prefers_separated_identities(self):
+        labels = torch.tensor([0, 0, 1, 1])
+        separated = torch.tensor([
+            [1.0, 0.0], [1.0, 0.0], [0.0, 1.0], [0.0, 1.0],
+        ])
+        confused = torch.tensor([
+            [1.0, 0.0], [0.0, 1.0], [1.0, 0.0], [0.0, 1.0],
+        ])
+
+        separated_loss = MODULE.batch_hard_triplet_loss(separated, labels, margin=0.2)
+        confused_loss = MODULE.batch_hard_triplet_loss(confused, labels, margin=0.2)
+
+        self.assertLess(separated_loss.item(), confused_loss.item())
+
+    def test_batch_hard_triplet_is_finite_and_backpropagates(self):
+        raw_features = torch.randn(6, 4, requires_grad=True)
+        features = torch.nn.functional.normalize(raw_features, dim=1)
+        labels = torch.tensor([0, 0, 1, 1, 2, 2])
+
+        loss = MODULE.batch_hard_triplet_loss(features, labels, margin=0.2)
+
+        self.assertTrue(torch.isfinite(loss))
+        loss.backward()
+        self.assertIsNotNone(raw_features.grad)
+
     def test_checkpoint_builder_restores_residual_mode(self):
         source = MODULE.ResidualMetricAdapter(4, 8, 4, residual=True)
         for parameter in source.project.parameters():

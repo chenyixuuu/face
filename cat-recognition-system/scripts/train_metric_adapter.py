@@ -76,12 +76,31 @@ def supervised_contrastive_loss(features: torch.Tensor, labels: torch.Tensor, te
     return (denominator - positive_mean).mean()
 
 
+def batch_hard_triplet_loss(
+    features: torch.Tensor, labels: torch.Tensor, margin: float,
+) -> torch.Tensor:
+    distances = 1.0 - features @ features.T
+    self_mask = torch.eye(len(labels), dtype=torch.bool, device=labels.device)
+    positive_mask = labels[:, None].eq(labels[None, :]) & ~self_mask
+    negative_mask = ~labels[:, None].eq(labels[None, :])
+    hardest_positive = distances.masked_fill(~positive_mask, float("-inf")).max(dim=1).values
+    hardest_negative = distances.masked_fill(~negative_mask, float("inf")).min(dim=1).values
+    return F.relu(hardest_positive - hardest_negative + margin).mean()
+
+
 def make_groups(labels: np.ndarray, min_images: int = 2) -> tuple[list[str], dict[str, np.ndarray]]:
     groups: dict[str, list[int]] = defaultdict(list)
     for index, label in enumerate(labels.astype(str)):
         groups[label].append(index)
     eligible = sorted(label for label, indices in groups.items() if len(indices) >= min_images)
     return eligible, {label: np.asarray(groups[label], dtype=np.int64) for label in eligible}
+
+
+def resolve_scheduler_steps(training_steps: int, scheduler_steps: int | None) -> int:
+    resolved = training_steps if scheduler_steps is None else scheduler_steps
+    if resolved < training_steps:
+        raise ValueError("scheduler_steps cannot be smaller than training steps")
+    return resolved
 
 
 def sample_balanced_batch(
@@ -150,12 +169,15 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--device", default="cuda")
     parser.add_argument("--steps", type=int, default=3000)
+    parser.add_argument("--scheduler-steps", type=int)
     parser.add_argument("--identities-per-batch", type=int, default=128)
     parser.add_argument("--images-per-identity", type=int, default=2)
     parser.add_argument("--hidden-dim", type=int, default=1024)
     parser.add_argument("--output-dim", type=int, default=256)
     parser.add_argument("--residual", action="store_true")
     parser.add_argument("--temperature", type=float, default=0.07)
+    parser.add_argument("--triplet-weight", type=float, default=0.0)
+    parser.add_argument("--triplet-margin", type=float, default=0.2)
     parser.add_argument("--learning-rate", type=float, default=3e-4)
     parser.add_argument("--weight-decay", type=float, default=1e-4)
     parser.add_argument("--eval-every", type=int, default=500)
@@ -183,7 +205,9 @@ def main() -> int:
         train_vectors.shape[1], args.hidden_dim, args.output_dim, residual=args.residual,
     ).to(device)
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
-    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.steps)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+        optimizer, T_max=resolve_scheduler_steps(args.steps, args.scheduler_steps),
+    )
     rng = np.random.default_rng(args.seed)
     args.output.mkdir(parents=True, exist_ok=True)
     history_path = args.output / "history.jsonl"
@@ -202,17 +226,30 @@ def main() -> int:
             )
             batch, labels = batch.to(device), labels.to(device)
             optimizer.zero_grad(set_to_none=True)
-            loss = supervised_contrastive_loss(model(batch), labels, args.temperature)
+            features = model(batch)
+            supcon_loss = supervised_contrastive_loss(features, labels, args.temperature)
+            triplet_loss = batch_hard_triplet_loss(features, labels, args.triplet_margin)
+            loss = supcon_loss + args.triplet_weight * triplet_loss
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 5.0)
             optimizer.step()
             scheduler.step()
 
             if step == 1 or step % 50 == 0:
-                print(f"step={step} loss={loss.item():.6f} lr={scheduler.get_last_lr()[0]:.8f}", flush=True)
+                print(
+                    f"step={step} loss={loss.item():.6f} supcon={supcon_loss.item():.6f} "
+                    f"triplet={triplet_loss.item():.6f} lr={scheduler.get_last_lr()[0]:.8f}",
+                    flush=True,
+                )
             if step % args.eval_every == 0 or step == args.steps:
                 metrics = retrieval_metrics(model, val_vectors, val_ids, val_paths, device, args.eval_batch_size)
-                record = {"step": step, "loss": float(loss.item()), **metrics}
+                record = {
+                    "step": step,
+                    "loss": float(loss.item()),
+                    "supcon_loss": float(supcon_loss.item()),
+                    "triplet_loss": float(triplet_loss.item()),
+                    **metrics,
+                }
                 history.write(json.dumps(record) + "\n")
                 history.flush()
                 print(json.dumps(record), flush=True)

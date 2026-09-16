@@ -1,0 +1,17 @@
+{
+  "split": "validation",
+  "selection_metric": "top1",
+  "baseline_at_step_500": 0.5677971830985915,
+  "fair_scheduler_steps": 2000,
+  "fair_screening": [
+    {"triplet_weight": 0.05, "top1": 0.5683605633802817, "top3": 0.665825352112676},
+    {"triplet_weight": 0.10, "top1": 0.5690140845070423, "top3": 0.6662985915492958},
+    {"triplet_weight": 0.20, "top1": 0.5699605633802817, "top3": 0.6672450704225352}
+  ],
+  "selected_triplet_weight": 0.20,
+  "triplet_margin": 0.2,
+  "discarded_initial_screen": {
+    "reason": "The initial 500-step screening used a 500-step cosine horizon, while the baseline checkpoint at step 500 came from a 2000-step horizon. The learning-rate schedules were not comparable.",
+    "top1_by_weight": {"0.05": 0.5483492957746479, "0.10": 0.5488450704225352, "0.20": 0.5497464788732395}
+  }
+}

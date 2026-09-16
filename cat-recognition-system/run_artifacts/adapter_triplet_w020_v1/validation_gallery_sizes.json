@@ -1,0 +1,69 @@
+{
+  "split": "validation",
+  "standard_protocol": "first K path-sorted images form a normalized centroid; all remaining images are queries",
+  "standard_results": [
+    {
+      "gallery_size": 1,
+      "query_start": 1,
+      "gallery_identities": 15498,
+      "queries": 44375,
+      "top1": 0.6058591549295774,
+      "top3": 0.7045633802816902,
+      "mean_top1_similarity": 0.7653453946113586,
+      "median_images_per_eligible_identity": 4.0
+    },
+    {
+      "gallery_size": 2,
+      "query_start": 2,
+      "gallery_identities": 12083,
+      "queries": 28877,
+      "top1": 0.7068601309000242,
+      "top3": 0.7947501471759532,
+      "mean_top1_similarity": 0.7903662919998169,
+      "median_images_per_eligible_identity": 4.0
+    },
+    {
+      "gallery_size": 3,
+      "query_start": 3,
+      "gallery_identities": 8283,
+      "queries": 16794,
+      "top1": 0.7699178277956413,
+      "top3": 0.8458973442896273,
+      "mean_top1_similarity": 0.8016006350517273,
+      "median_images_per_eligible_identity": 5.0
+    }
+  ],
+  "matched_cohort_protocol": "all K values use identities with more than max(K) images and the same queries after max(K)",
+  "matched_cohort_results": [
+    {
+      "gallery_size": 1,
+      "query_start": 3,
+      "gallery_identities": 8283,
+      "queries": 16794,
+      "top1": 0.6207574133619149,
+      "top3": 0.7249612957008456,
+      "mean_top1_similarity": 0.7532792091369629,
+      "median_images_per_eligible_identity": 5.0
+    },
+    {
+      "gallery_size": 2,
+      "query_start": 3,
+      "gallery_identities": 8283,
+      "queries": 16794,
+      "top1": 0.7163272597356198,
+      "top3": 0.804453971656544,
+      "mean_top1_similarity": 0.7851773500442505,
+      "median_images_per_eligible_identity": 5.0
+    },
+    {
+      "gallery_size": 3,
+      "query_start": 3,
+      "gallery_identities": 8283,
+      "queries": 16794,
+      "top1": 0.7699178277956413,
+      "top3": 0.8458973442896273,
+      "mean_top1_similarity": 0.8016006350517273,
+      "median_images_per_eligible_identity": 5.0
+    }
+  ]
+}
