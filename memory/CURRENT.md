@@ -35,6 +35,7 @@
 - 新残差适配器 validation 单图登记 Top-1/Top-3 为 60.43%/70.30%；公平 1/2/3 图登记 Top-1 为 61.88%/71.47%/76.84%。权重位于 `cat-recognition-system/run_artifacts/adapter_residual_i3_v1/best.pt`。
 - Triplet 权重 0.20 的新最佳模型 validation Top-1/Top-3 为 60.59%/70.46%；公平 1/2/3 图登记 Top-1 为 62.08%/71.63%/76.99%。权重位于 `cat-recognition-system/run_artifacts/adapter_triplet_w020_v1/best.pt`。
 - 队长 ArcFace V2 已用同一原始 validation 公平复评：标准 1/2/3 图 Top-1 为 59.21%/70.02%/77.12%。当前 Triplet 在 1～2 图登记更好；ArcFace V2 在 3 图时只高 0.13 个百分点。报告见 `cat-recognition-system/ARCFACE_V2_COMPARISON.md`，test 未读取。
+- 未知猫拒识内部实验：2 图登记、排除 418 个疑似标签冲突 ID，约 1% 未知猫误接受时，已知猫正确接受仅 30.94%。不部署自动身份确认；先做 Top-3 候选与人工审核。详见 `cat-recognition-system/UNKNOWN_CAT_VALIDATION.md`。
 - 服务器 `transformer` 环境已增加并固定 `opencv-python-headless==4.10.0.84`，用于本次猫脸级联检测实验。
 
 ## 详细历史

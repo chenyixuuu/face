@@ -410,6 +410,8 @@
 - 对比报告和结构化结果已保存为 `cat-recognition-system/ARCFACE_V2_COMPARISON.md` 与 `cat-recognition-system/run_artifacts/arcface_v2_original_validation/validation_gallery_sizes.json`。
 - 对 349 对 validation 跨身份近重复候选、178 个关联组完成只读优先级统计；第 133 组下载五个身份的原图到本机临时目录并抽查配对画面，记录为强烈疑似同猫多 ID，未改动原图或标签。复核进度见 `cat-recognition-system/VALIDATION_IDENTITY_REVIEW.md`。
 - 过程问题：本机默认 Python 缺 Pillow，未做像素级比较；一次 SFTP 花括号批量路径不受支持，改为逐目录只读下载。两项均未影响原始数据。
+- 2026-09-17：启动未知猫拒识评估，协议为 validation 内身份级校准/核验拆分，并排除既有 418 个疑似标签冲突身份；不改动原数据或最终 test。
+- 2026-09-17：完成校准组与内部核验组实验；发现 float32 阈值边界导致校准 FAR 略超 1%，改用同 dtype 的 nextafter 后重跑，校准 FAR 为 0.9948%、核验 FAR 为 0.9887%。核验已知猫正确接受仅 30.94%，不建议部署自动确认阈值。代码、结果与限制分别见 `scripts/evaluate_unknown_cats.py`、`run_artifacts/adapter_triplet_w020_v1/validation_unknown_rejection_v1.json`、`UNKNOWN_CAT_VALIDATION.md`。
 
 ### 本地工程文件整理（2026-09-14）
 

@@ -1,0 +1,37 @@
+{
+  "split": "validation_only",
+  "protocol": "Identity-disjoint calibration and evaluation roles; known gallery uses first K path-sorted photos; remaining known photos and all unknown photos are queries.",
+  "seed": 20260917,
+  "gallery_size": 2,
+  "excluded_conflict_identities": 418,
+  "eligible_identities": 11749,
+  "role_identity_counts": {
+    "calibration_known": 2938,
+    "calibration_unknown": 2937,
+    "evaluation_known": 2937,
+    "evaluation_unknown": 2937
+  },
+  "target_max_unknown_false_accept_rate": 0.01,
+  "selected_threshold": 0.8324798345565796,
+  "calibration": {
+    "gallery_identities": 2938,
+    "known_queries": 7044,
+    "unknown_queries": 12766,
+    "known_top1_without_rejection": 0.7915956842703009,
+    "known_correct_accept_rate": 0.3147359454855196,
+    "known_reject_rate": 0.6831345826235093,
+    "unknown_false_accept_rate": 0.00994830017233276,
+    "unknown_reject_rate": 0.9900516998276673
+  },
+  "evaluation": {
+    "gallery_identities": 2937,
+    "known_queries": 7037,
+    "unknown_queries": 12946,
+    "known_top1_without_rejection": 0.7851357112405855,
+    "known_correct_accept_rate": 0.3093647861304533,
+    "known_reject_rate": 0.6882194116811141,
+    "unknown_false_accept_rate": 0.009887223852927545,
+    "unknown_reject_rate": 0.9901127761470725
+  },
+  "limitations": "Internal validation simulation only; not a campus-photo or final-test estimate. Candidate matches still require human confirmation."
+}
